@@ -2,14 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace ParseEquation
+namespace ComputeEquation
 {
     class Program
     {
         static void Main(string[] args)
         {
+            string eqGood = "17x^4y^3 + -9x^3y^2 + 87yx^2 - 19x";
+            decimal[] val = { 17, 23, 19 };
+
+            string eqBad1 = "17k^4y^3 + -9x^3y^2 + 87yx^2 - 19x";
+            string eqBad2 = "17x^4y^3 * -9x^3y^2 + 87yx^2 - 19x";
+
+
+            Console.WriteLine(Calculate.ParseEquation(eqBad2));
+
+            Console.ReadKey();
+
         }
     }
 
@@ -31,11 +43,23 @@ namespace ParseEquation
         public static decimal Polynomial(string eq, decimal[] values)
         {
             decimal ret = 0;
+            Dictionary<int, string> ops = new Dictionary<int, string>();
+            List<string> substr = new List<string>();
+            List<SubEquation> subs = new List<SubEquation>();
 
+            //make sure equation string follows the rules first
+            if (ParseEquation(eq))
+            {
+                ops = FindOperators(eq);
+                substr = GetSubEquationStrings(eq);
+                subs = ParseSubEquation(substr, values);
+                ret = FinalCalc(ops, subs);
+            }
 
 
             return ret;
         }
+
 
         /// <summary>
         /// Private Method: ParseEquation - This method parses the string equations to make sure that the 'rules' 
@@ -47,13 +71,16 @@ namespace ParseEquation
         /// </summary>
         /// <param name="eq">String - The equation to be parsed.</param>
         /// <returns>Boolean - True if the given equation follows the rules or False if not</returns>
-        private static bool ParseEquation(string eq)
+        /// <exception cref="">"The equation was not properly formed. Please check the equation and try again."</exception>
+        public static bool ParseEquation(string eq)
         {
-            bool parse = false;
+            Regex regx = new Regex(@"[0-9]\s\^\-\+xyz", RegexOptions.IgnoreCase);
 
+            if (regx.IsMatch(eq))
+                return true;
+            else
+                throw new Exception("The equation was not properly formed. Please check the equation and try again.");
 
-
-            return parse;
         }
 
 
@@ -64,7 +91,7 @@ namespace ParseEquation
         /// </summary>
         /// <param name="eq">String - The equation to be parsed.</param>
         /// <returns>Dictionary(int, string) - The list of the operators (+,-) and their locations in the equation string.</returns>
-        private static Dictionary<int,string> FindOperators(string eq)
+        public static Dictionary<int,string> FindOperators(string eq)
         {
             Dictionary<int, string> ops = new Dictionary<int, string>();
 
@@ -75,16 +102,49 @@ namespace ParseEquation
 
 
         /// <summary>
-        /// Private Method: ParseSubEquation - This method creates objects from the terms in the equation string.
-        ///     These term objects are used in evaluation of the final answer to the equation.
+        /// Private Method: GetSubEquationStrings - This method splits the equations string and retrieves all of the terms in the 
+        ///     equation, using the location of the operators as a hint. The method adds each substring to a List(string).
+        ///     This List(string) is passed to ParseSubEquation().
         /// </summary>
-        /// <returns>List(SubEquation)</returns>
-        private static List<SubEquation> ParseSubEquation()
+        /// <param name="eq">String - The equation to be parsed.</param>
+        /// <returns>List(string) - The terms in the equation as strings.</returns>
+        public static List<string> GetSubEquationStrings(string eq)
+        {
+            List<string> subs = new List<string>();
+
+
+
+            return subs;
+        }
+
+
+        /// <summary>
+        /// Private Method: ParseSubEquation - This method creates objects from the term substrings.
+        ///     These term objects are used in evaluation of the final answer to the equation.
+        ///     The method first parses each substring with a Regex to make sure it conforms to the rules.
+        ///     IF the term is not properly formed or as 'illegal' characters, then an Exception is thrown.
+        /// </summary>
+        /// <returns>List(SubEquation) - A list of all the equations terms as SubEquation objects.</returns>
+        /// <remarks>ParseSubEquation() receives its input from GetSubEquationStrings()</remarks>
+        /// <exception cref="">"One or more equation terms was not properly formed. Check the equations and try again."</exception>
+        public static List<SubEquation> ParseSubEquation(List<string> subeq, decimal[] values)
         {
             List<SubEquation> subs = new List<SubEquation>();
 
+            // Make sure that the term matches Int[xyz]^Int[xyz]^Int[xyz]^Int
+            Regex regx = new Regex(@"^[0-9][xyz]\^[0-9]*[xyz]\^[0-9]*[xyz]\^[0-9]*", RegexOptions.IgnoreCase);
 
-
+            foreach (var sub in subeq)
+            {
+                if (regx.IsMatch(sub))
+                {
+                    return subs;
+                }
+                else
+                {
+                    throw new Exception("One or more equation terms was not properly formed. Check the equations and try again.");
+                }
+            }
 
             return subs;
         }
@@ -96,7 +156,7 @@ namespace ParseEquation
         /// <param name="operators">Dictionary(int,</param>
         /// <param name="subs"></param>
         /// <returns></returns>
-        private static decimal FinalCalc(Dictionary<int, string> operators, List<SubEquation> subs)
+        public static decimal FinalCalc(Dictionary<int, string> operators, List<SubEquation> subs)
         {
             decimal final = 0;
 
