@@ -39,7 +39,10 @@ namespace ComputeEquation
         /// <param name="values">decimal[] - the decimal values of X, Y, and Z (in that order).</param>
         /// <returns>Decimal - The value that the equation produces, given the input values.</returns>
         /// <remarks>The input equation must use '^' as the exponent character. The terms may not have
-        /// multiple coefficients. For a good definition of a Polynomial, see Wikipedia. </remarks>
+        /// multiple coefficients. For a good definition of a Polynomial, see Wikipedia. 
+        /// 
+        ///  Exception handling is done in helper methods, because they have the proper context 
+        ///  to provide more details to consumers.</remarks>
         public static decimal Polynomial(string eq, decimal[] values)
         {
             decimal ret = 0;
@@ -51,7 +54,7 @@ namespace ComputeEquation
             if (ParseEquation(eq))
             {
                 ops = FindOperators(eq);
-                substr = GetSubEquationStrings(eq);
+                substr = GetSubEquationStrings(eq, ops);
                 subs = ParseSubEquation(substr, values);
                 ret = FinalCalc(ops, subs);
             }
@@ -74,6 +77,8 @@ namespace ComputeEquation
         /// <exception cref="">"The equation was not properly formed. Please check the equation and try again."</exception>
         public static bool ParseEquation(string eq)
         {
+            // Regex checks for any 'illegal' characters. No point in continuing if 
+            //  if consumer provides bad equation. 
             Regex regx = new Regex(@"[0-9]\s\^\-\+xyz", RegexOptions.IgnoreCase);
 
             if (regx.IsMatch(eq))
@@ -95,8 +100,24 @@ namespace ComputeEquation
         {
             Dictionary<int, string> ops = new Dictionary<int, string>();
 
+            // Iterate through equation string and find all the legal operators
+            for (int i = 0; i <= eq.Length; i++)
+            {
+                // Using switch in case (no pun intended) I want to add more legal operators in future releases
+                //  If we find a match add the location in the string and the operator. 
+                switch (eq.Substring(i,1))
+                {
+                   case "-":
+                        ops.Add(i, "-");
+                        break;
+                    case "+":
+                        ops.Add(i, "+");
+                        break;
 
-
+                    default:
+                        break;
+                }
+            }
             return ops;
         }
 
@@ -108,12 +129,27 @@ namespace ComputeEquation
         /// </summary>
         /// <param name="eq">String - The equation to be parsed.</param>
         /// <returns>List(string) - The terms in the equation as strings.</returns>
-        public static List<string> GetSubEquationStrings(string eq)
+        public static List<string> GetSubEquationStrings(string eq, Dictionary<int, string> ops)
         {
             List<string> subs = new List<string>();
+            string eqCopy = eq;
+            // Make sure that the term matches Int[xyz]^Int[xyz]^Int[xyz]^Int
+            Regex regx = new Regex(@"^[0-9][xyz]\^[0-9]*[xyz]\^[0-9]*[xyz]\^[0-9]*", RegexOptions.IgnoreCase);
 
 
-
+            foreach (KeyValuePair<int, string> kp in ops)
+            {
+                string sub = eqCopy.Substring(0, kp.Key);
+                if (regx.IsMatch(sub))
+                {
+                    subs.Add(sub);
+                    eqCopy = eqCopy.Substring(kp.Key, eqCopy.Length - kp.Key);
+                }
+                else
+                {
+                    throw new Exception($"The equation term {sub} was not properly formed. Check the equations and try again.");
+                }
+            }
             return subs;
         }
 
@@ -131,19 +167,10 @@ namespace ComputeEquation
         {
             List<SubEquation> subs = new List<SubEquation>();
 
-            // Make sure that the term matches Int[xyz]^Int[xyz]^Int[xyz]^Int
-            Regex regx = new Regex(@"^[0-9][xyz]\^[0-9]*[xyz]\^[0-9]*[xyz]\^[0-9]*", RegexOptions.IgnoreCase);
 
             foreach (var sub in subeq)
             {
-                if (regx.IsMatch(sub))
-                {
-                    return subs;
-                }
-                else
-                {
-                    throw new Exception("One or more equation terms was not properly formed. Check the equations and try again.");
-                }
+
             }
 
             return subs;
