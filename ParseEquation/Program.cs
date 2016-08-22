@@ -12,7 +12,7 @@ namespace ComputeEquation
         static void Main(string[] args)
         {
             string eqGood = "17x^4y^3 + -9x^3y^2 + 87yx^2 - 19x";
-            decimal[] val = { 17, 23, 19 };
+            int[] val = { 17, 23, 19 };
 
             string eqBad1 = "17k^4y^3 + -9x^3y^2 + 87yx^2 - 19x";
             string eqBad2 = "17x^4y^3 * -9x^3y^2 + 87yx^2 - 19x";
@@ -29,6 +29,7 @@ namespace ComputeEquation
     {
 
         #region Simple Polynomial Method
+
         /// <summary>
         /// Method: Polynomial - This is the public-facing method that takes a string (the equation) + 
         ///     a decimal[] the decimal values of X, Y, and Z and returns the decimal answer of the equation
@@ -110,9 +111,6 @@ namespace ComputeEquation
                 // If we find a match add the location in the string and the operator. 
                 switch (eq.Substring(i,1))
                 {
-                   case "-":
-                        ops.Add(i, "-");
-                        break;
                     case "+":
                         ops.Add(i, "+");
                         break;
@@ -152,7 +150,7 @@ namespace ComputeEquation
                 }
                 else
                 {
-                    throw new Exception($"The equation term {sub} was not properly formed. Check the equations and try again.");
+                    throw new Exception($"The equation term {sub} was not properly formed. Check the equation and try again.");
                 }
             }
             return terms;
