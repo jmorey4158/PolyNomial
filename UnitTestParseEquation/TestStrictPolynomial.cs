@@ -8,9 +8,7 @@ namespace UnitTestParseEquation
     [TestClass]
     public class TestStrictPolynomial
     {
-        private const string eqGood = "17x^4y^3 + -9x^3y^2 + 87x^2y + 19x";
-        private const decimal finalValue = 0;
-        private decimal[] testVariables = { 3, 4, 5 };
+
 
 
         #region Test IsValidEquation
@@ -18,7 +16,7 @@ namespace UnitTestParseEquation
         [TestMethod]
         public void TestIsValidEquation_GoodEquation_ShouldSuccede()
         {
-            Assert.IsTrue(Helper.IsValidEquation(eqGood));
+            Assert.IsTrue(Helper.IsValidEquation(TestValues.eqGood));
         }
 
         [TestMethod]
@@ -45,8 +43,8 @@ namespace UnitTestParseEquation
         [TestMethod]
         public void TestFindOperators_GoodEquation_ShouldSuccede()
         {
-            Dictionary<int, string> test = Helper.FindOperators(eqGood);
-            Dictionary<int, string> pattern = CreateOps();
+            Dictionary<int, string> test = Helper.FindOperators(TestValues.eqGood);
+            Dictionary<int, string> pattern = TestValues.CreateOps();
 
             Assert.AreEqual<Dictionary<int, string>>(pattern, test);
 
@@ -67,8 +65,8 @@ namespace UnitTestParseEquation
         [TestMethod]
         public void TestFindTerms_GoodEquation_ShouldSuccede()
         {
-            List<string> termStr = CreateTermStrings();
-            List<string> testTerms = Helper.FindTerms(eqGood, CreateOps());
+            List<string> termStr = TestValues.CreateTermStrings();
+            List<string> testTerms = Helper.FindTerms(TestValues.eqGood, TestValues.CreateOps());
 
             Assert.AreEqual<List<string>>(termStr, testTerms);
         }
@@ -89,8 +87,8 @@ namespace UnitTestParseEquation
         [TestMethod]
         public void TestFindExponent_GoodEquation_ShouldSuccede()
         {
-            Dictionary<int, string> expectedOps = CreateOps();
-            Dictionary<int, string> testOps = Helper.FindOperators(eqGood);
+            Dictionary<int, string> expectedOps = TestValues.CreateOps();
+            Dictionary<int, string> testOps = Helper.FindOperators(TestValues.eqGood);
 
             Assert.AreEqual<Dictionary<int, string>>(expectedOps, testOps);
 
@@ -113,8 +111,8 @@ namespace UnitTestParseEquation
         [TestMethod]
         public void TestParseTerms_GoodEquation_ShouldSuccede()
         {
-            List<Term> expectedTerms = CreateTerms();
-            List<Term> testTerms = Helper.ParseTerms(CreateTermStrings());
+            List<Term> expectedTerms = TestValues.CreateTerms();
+            List<Term> testTerms = Helper.ParseTerms(TestValues.CreateTermStrings());
 
             Assert.AreEqual<List<Term>>(expectedTerms, testTerms);
 
@@ -137,10 +135,10 @@ namespace UnitTestParseEquation
         [TestMethod]
         public void TestFinalCal_GoodEquation_ShouldSuccede()
         {
-            List<Term> terms = CreateTerms();
-            decimal testResutl = Helper.FinalCalc(CreateOps(), terms);
+            List<Term> terms = TestValues.CreateTerms();
+            decimal testResult = Helper.FinalCalc(TestValues.CreateOps(), terms);
 
-            Assert.AreEqual(finalValue, testResutl);
+            Assert.AreEqual(TestValues.finalValue, testResult);
 
         }
 
@@ -160,81 +158,13 @@ namespace UnitTestParseEquation
         [TestMethod]
         public void TestStrictPolynomial_GoodEquation_ShouldSuccede()
         {
-            Assert.AreEqual<decimal>(finalValue, Calculate.StrictPolynomial(eqGood, testVariables));
+            Assert.AreEqual<decimal>(TestValues.finalValue, 
+                Calculate.StrictPolynomial(TestValues.eqGood, TestValues.testVariables));
         }
 
         #endregion
 
 
 
-        #region Generate Objects for Tests
-
-        private List<Term> CreateTerms()
-        {
-            List<Term> terms = new List<Term>();
-
-            Term term1 = new Term()
-            {
-                Coefficient = 17,
-                xPower = 4,
-                yPower = 3,
-                zPower = 0
-            };
-            terms.Add(term1);
-
-            Term term2 = new Term()
-            {
-                Coefficient = -9,
-                xPower = 3,
-                yPower = 2,
-                zPower = 0
-            };
-            terms.Add(term2);
-
-            Term term3 = new Term()
-            {
-                Coefficient = 87,
-                xPower = 2,
-                yPower = 1,
-                zPower = 0
-            };
-            terms.Add(term3);
-
-
-            Term term4 = new Term()
-            {
-                Coefficient = 87,
-                xPower = 1,
-                yPower = 0,
-                zPower = 0
-            };
-            terms.Add(term4);
-
-
-            return terms;
-        }
-
-        private Dictionary<int, string> CreateOps()
-        {
-            Dictionary<int, string> ops = new Dictionary<int, string>();
-            ops.Add(12, "+");
-            ops.Add(24, "+");
-            ops.Add(33, "+");
-
-            return ops;
-        }
-
-        private List<string> CreateTermStrings()
-        {
-            List<string> termStrings = new List<string>();
-            termStrings.Add("17x^4y^3");
-            termStrings.Add("-9x^3y^2");
-            termStrings.Add("87x^2y");
-            termStrings.Add("19x");
-
-            return termStrings;
-        }
-
-        #endregion
     }
 }

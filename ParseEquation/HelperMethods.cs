@@ -228,7 +228,7 @@ namespace ParseEquation
         public static decimal FinalCalc(Dictionary<int, string> operators, List<Term> terms)
         {
             decimal final = 0;
-
+            // TODO: Complete implementation of FinalCalc
             return final;
         }
 
