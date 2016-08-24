@@ -5,7 +5,7 @@ using ParseEquation;
 namespace UnitTestParseEquation
 {
     [TestClass]
-    public class TestSimplePolynomial
+    public class TestStrictPolynomial
     {
         #region Test IsValidEquation
 
@@ -14,6 +14,9 @@ namespace UnitTestParseEquation
         public void TestIsValidEquation_GoodEquation_ShouldSuccede()
         {
             string eqGood = "17x^4y^3x^2 + -9x^3y^2z + 87x^2y + 19x";
+            string eqBad = "The quick brown fox jumped over the lazy dogs.";
+
+            Assert.IsTrue(Helper.IsValidEquation(eqBad));
         }
 
         [TestMethod]
@@ -25,6 +28,10 @@ namespace UnitTestParseEquation
             string eqBad3 = "17y^4x^3x^2 + -9x^3y^2z + 87x^2y + 19x"; // has wrong order of variables
             string eqBad4 = "17y^4y^3x^2 + -9x^3y^2z + 87x^2y + 19x"; // has duplicate variable 'y'
 
+            Assert.IsFalse(Helper.IsValidEquation(eqBad1));
+            Assert.IsFalse(Helper.IsValidEquation(eqBad2));
+            Assert.IsFalse(Helper.IsValidEquation(eqBad3));
+            Assert.IsFalse(Helper.IsValidEquation(eqBad4));
         }
 
         #endregion

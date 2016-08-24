@@ -25,8 +25,8 @@ namespace ParseEquation
         {
             // Regex checks for any 'illegal' characters. No point in continuing if 
             //  if consumer provides bad equation. 
-            Regex regx = new Regex(@"[0-9]\s\^\-\+xyz", RegexOptions.IgnoreCase);
-
+            //Regex regx = new Regex(@"[0-9]\s\^\-\+xyz", RegexOptions.IgnoreCase);
+            Regex regx = new Regex(@"[0-9\s\^\-\+xyz]", RegexOptions.IgnoreCase);
 
             if (regx.IsMatch(eq))
                 return true;
