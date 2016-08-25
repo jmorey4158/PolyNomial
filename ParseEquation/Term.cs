@@ -16,7 +16,6 @@ namespace ParseEquation
         {
             xPower = 1;
             yPower = 1;
-            zPower = 1;
         }
 
         public int Coefficient { get; set; }
@@ -24,8 +23,5 @@ namespace ParseEquation
         public int xPower { get; set; }
 
         public int yPower { get; set; }
-
-        public int zPower { get; set; }
-
     }
 }

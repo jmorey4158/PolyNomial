@@ -16,20 +16,16 @@ namespace UnitTestParseEquation
         [TestMethod]
         public void TestIsValidEquation_GoodEquation_ShouldSuccede()
         {
-            Assert.IsTrue(Helper.IsValidEquation(TestValues.eqGood));
+            Assert.IsTrue(Helper.IsValidEquation(KnownGoodValues.knownGoodEquationString));
         }
+
 
         [TestMethod]
         public void TestIsValidEquation_BadEquation_ShouldThrowException()
         {
-            // Setting up multiple wrong ways to test each one
-            List<string> BadEqs = new List<string>();
-            BadEqs.Add("17k^4y^3x^2 + -9x^3y^2z + 87x^2y + 19x"); //has wrong variable 'k'
-            BadEqs.Add("17x^4y^3x^2 * -9x^3y^2z + 87x^2y + 19x"); // has wrong operator '*'
-            BadEqs.Add("17y^4x^3x^2 + -9x^3y^2z + 87x^2y + 19x"); // has wrong order of variables
-            BadEqs.Add("17y^4y^3x^2 + -9x^3y^2z + 87x^2y + 19x"); // has duplicate variable 'y'
+            List<string> badEquations = KnownBadValues.KnownBadEquationStrings();
 
-            foreach (string beq in BadEqs)
+            foreach (string beq in badEquations)
             {
                 Assert.IsFalse(Helper.IsValidEquation(beq));
             }
@@ -43,8 +39,8 @@ namespace UnitTestParseEquation
         [TestMethod]
         public void TestFindOperators_GoodEquation_ShouldSuccede()
         {
-            Dictionary<int, string> test = Helper.FindOperators(TestValues.eqGood);
-            Dictionary<int, string> pattern = TestValues.CreateOps();
+            Dictionary<int, string> test = Helper.FindOperators(KnownGoodValues.knownGoodEquationString);
+            Dictionary<int, string> pattern = KnownGoodValues.KnownGoodOps();
 
             Assert.AreEqual<Dictionary<int, string>>(pattern, test);
 
@@ -65,8 +61,8 @@ namespace UnitTestParseEquation
         [TestMethod]
         public void TestFindTerms_GoodEquation_ShouldSuccede()
         {
-            List<string> termStr = TestValues.CreateTermStrings();
-            List<string> testTerms = Helper.FindTerms(TestValues.eqGood, TestValues.CreateOps());
+            List<string> termStr = KnownGoodValues.KnownGoodTermStrings();
+            List<string> testTerms = Helper.FindTerms(KnownGoodValues.knownGoodEquationString, KnownGoodValues.KnownGoodOps());
 
             Assert.AreEqual<List<string>>(termStr, testTerms);
         }
@@ -75,7 +71,6 @@ namespace UnitTestParseEquation
         public void TestFindTerms_BadEquation_ShouldThrowException()
         {
             // Should throw Exception("The equation was not properly formed. Please check the equation and try again.")
-            string eqBad = "17x^^4y^3 + -9x^3y^2 + 87yx^2 + 19x"; // Extra '^' char
         }
 
 
@@ -87,8 +82,8 @@ namespace UnitTestParseEquation
         [TestMethod]
         public void TestFindExponent_GoodEquation_ShouldSuccede()
         {
-            Dictionary<int, string> expectedOps = TestValues.CreateOps();
-            Dictionary<int, string> testOps = Helper.FindOperators(TestValues.eqGood);
+            Dictionary<int, string> expectedOps = KnownGoodValues.KnownGoodOps();
+            Dictionary<int, string> testOps = Helper.FindOperators(KnownGoodValues.knownGoodEquationString);
 
             Assert.AreEqual<Dictionary<int, string>>(expectedOps, testOps);
 
@@ -111,8 +106,8 @@ namespace UnitTestParseEquation
         [TestMethod]
         public void TestParseTerms_GoodEquation_ShouldSuccede()
         {
-            List<Term> expectedTerms = TestValues.CreateTerms();
-            List<Term> testTerms = Helper.ParseTerms(TestValues.CreateTermStrings());
+            List<Term> expectedTerms = KnownGoodValues.KnownGoodTerm();
+            List<Term> testTerms = Helper.ParseTerms(KnownGoodValues.KnownGoodTermStrings());
 
             Assert.AreEqual<List<Term>>(expectedTerms, testTerms);
 
@@ -135,10 +130,10 @@ namespace UnitTestParseEquation
         [TestMethod]
         public void TestFinalCal_GoodEquation_ShouldSuccede()
         {
-            List<Term> terms = TestValues.CreateTerms();
-            decimal testResult = Helper.FinalCalc(TestValues.CreateOps(), terms, TestValues.testVariables);
+            List<Term> terms = KnownGoodValues.KnownGoodTerm();
+            decimal testResult = Helper.FinalCalc(KnownGoodValues.KnownGoodOps(), terms, KnownGoodValues.knownGoodVariableValues);
 
-            Assert.AreEqual(TestValues.finalValue, testResult);
+            Assert.AreEqual(KnownGoodValues.knownFinalAnswer, testResult);
 
         }
 
@@ -158,8 +153,8 @@ namespace UnitTestParseEquation
         [TestMethod]
         public void TestStrictPolynomial_GoodEquation_ShouldSuccede()
         {
-            Assert.AreEqual<decimal>(TestValues.finalValue, 
-                Calculate.StrictPolynomial(TestValues.eqGood, TestValues.testVariables));
+            Assert.AreEqual<decimal>(KnownGoodValues.knownFinalAnswer, 
+                Calculate.StrictPolynomial(KnownGoodValues.knownGoodEquationString, KnownGoodValues.knownGoodVariableValues));
         }
 
         #endregion

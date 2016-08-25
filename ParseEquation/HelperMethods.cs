@@ -26,7 +26,7 @@ namespace ParseEquation
             // Regex checks for any 'illegal' characters. No point in continuing if 
             //  if consumer provides bad equation. 
             //Regex regx = new Regex(@"[0-9]\s\^\-\+xyz", RegexOptions.IgnoreCase);
-            Regex regx = new Regex(@"[0-9\s\^\-\+xyz]", RegexOptions.IgnoreCase);
+            Regex regx = new Regex(@"[0-9\s\^\-\+xy]", RegexOptions.IgnoreCase);
 
             if (regx.IsMatch(eq))
                 return true;
@@ -78,7 +78,7 @@ namespace ParseEquation
             List<string> terms = new List<string>();
             string eqCopy = eq;
             // Make sure that the term matches a valid polynomial term (e.g. -17x^5y^4x^3)
-            Regex regx = new Regex(@"^\-?([0-9]+)(x\^[0-9]+)?(y\^[0-9]+)?(z\^[0-9]+)?", RegexOptions.IgnoreCase);
+            Regex regx = new Regex(@"^\-?([0-9]+)(x\^[0-9]+)?(y\^[0-9]+)?", RegexOptions.IgnoreCase);
 
 
             // Iterate through the equation string (positioned by the operator), grab the substring that represents the 
@@ -145,22 +145,6 @@ namespace ParseEquation
                 exp[1] = parseTry;
 
 
-            // Get position of z exponent.
-            pos = term.IndexOf('z') + 2;
-            for (int i = 0; i < term.Length - pos; i++)
-            {
-                int.TryParse(term.Substring(pos, 1), out parseTry);
-                if (parseTry > 0)
-                    expStr += term.Substring(pos, 1);
-                else
-                    break;
-
-            }
-            int.TryParse(expStr, out parseTry);
-            if (parseTry > 0)
-                exp[1] = parseTry;
-
-
             return exp;
         }
 
@@ -201,15 +185,10 @@ namespace ParseEquation
 
 
 
-                // Parse through the remainder of the subequation string and create the SubEquation class instance and then add it to the List(SubEquations)
+                // Parse through the remainder of the subequation string and create the Term class instance and then add it to the List(Term)
                 for (int i = position; i <= len; i++)
                 {
-
-
-
-
-
-
+                    //TODO: Parse term and create Term class instance
                 }
 
             }
@@ -227,6 +206,11 @@ namespace ParseEquation
         /// <returns></returns>
         public static decimal FinalCalc(Dictionary<int, string> operators, List<Term> termsList, double[] vars)
         {
+            // Make sure there are only two variables
+            if (vars.Length > 2)
+                throw new Exception($"Only two variables can be used 'x' and 'y'.");
+
+
             decimal final = 0m;
             int terms = termsList.Count();
             int ops = operators.Count();
@@ -265,8 +249,7 @@ namespace ParseEquation
             {
                 ret = term.Coefficient *
                     (decimal)(Math.Pow(vars[0], term.xPower)) *
-                    (decimal)(Math.Pow(vars[1], term.yPower)) *
-                    (decimal)(Math.Pow(vars[2], term.zPower));
+                    (decimal)(Math.Pow(vars[1], term.yPower));
             }
             catch (OverflowException)
             {
