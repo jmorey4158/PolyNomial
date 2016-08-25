@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParseEquation", "ParseEquat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestParseEquation", "UnitTestParseEquation\UnitTestParseEquation.csproj", "{2082BD42-68BE-4326-8B86-B0C2934B4C02}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdHocTests", "AdHocTests\AdHocTests.csproj", "{1D749EAD-23EE-4199-8F6B-4933F6E3D8D6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{2082BD42-68BE-4326-8B86-B0C2934B4C02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2082BD42-68BE-4326-8B86-B0C2934B4C02}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2082BD42-68BE-4326-8B86-B0C2934B4C02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D749EAD-23EE-4199-8F6B-4933F6E3D8D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D749EAD-23EE-4199-8F6B-4933F6E3D8D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D749EAD-23EE-4199-8F6B-4933F6E3D8D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D749EAD-23EE-4199-8F6B-4933F6E3D8D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

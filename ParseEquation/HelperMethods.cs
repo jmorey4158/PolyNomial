@@ -204,19 +204,19 @@ namespace ParseEquation
         /// <param name="operators">Dictionary(int,</param>
         /// <param name="subs"></param>
         /// <returns></returns>
-        public static decimal FinalCalc(Dictionary<int, string> operators, List<Term> termsList, double[] vars)
+        public static decimal FinalCalc(Dictionary<int, string> operators, List<Term> termsList, decimal[] vars)
         {
             // Make sure there are only two variables
             if (vars.Length > 2)
                 throw new Exception($"Only two variables can be used 'x' and 'y'.");
 
 
-            decimal final = 0m;
+            decimal final = 0;
             int terms = termsList.Count();
             int ops = operators.Count();
 
             // Make sure that there is one fewer operator than term. 
-            if (terms -1 != ops)
+            if (terms-1 != ops)
                 throw new Exception();
 
             else
@@ -241,22 +241,24 @@ namespace ParseEquation
         /// <param name="term">Term Class Instance</param>
         /// <param name="vars">int[] with the values for the x,y, and z variables respectively.</param>
         /// <returns>Decimal - the result of calculating the term.</returns>
-        public static decimal CalculateTerm(Term term, double[] vars)
+        public static decimal CalculateTerm(Term term, decimal[] vars)
         {
-            decimal ret = 0m;
+            double ret = 0;
+            double xPow = (double)vars[0];
+            double yPow = (double)vars[1];
 
             try
             {
-                ret = term.Coefficient *
-                    (decimal)(Math.Pow(vars[0], term.xPower)) *
-                    (decimal)(Math.Pow(vars[1], term.yPower));
+                ret = term.Coefficient;
+                ret *= Math.Pow(xPow, term.xPower);
+                ret *= Math.Pow(yPow, term.yPower);
             }
             catch (OverflowException)
             {
                 throw;
             }
 
-            return ret;
+            return (decimal)ret;
         }
 
 

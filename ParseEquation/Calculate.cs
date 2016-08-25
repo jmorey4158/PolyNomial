@@ -25,7 +25,7 @@ namespace ParseEquation
         /// 
         ///  Exception handling is done in helper methods, because they have the proper context 
         ///  to provide more details to consumers.</remarks>
-        public static decimal StrictPolynomial(string eq, double[] values)
+        public static decimal StrictPolynomial(string eq, decimal[] values)
         {
             decimal ret = 0;
             Dictionary<int, string> ops = new Dictionary<int, string>();
