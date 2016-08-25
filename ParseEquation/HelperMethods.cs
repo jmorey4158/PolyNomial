@@ -225,11 +225,55 @@ namespace ParseEquation
         /// <param name="operators">Dictionary(int,</param>
         /// <param name="subs"></param>
         /// <returns></returns>
-        public static decimal FinalCalc(Dictionary<int, string> operators, List<Term> terms)
+        public static decimal FinalCalc(Dictionary<int, string> operators, List<Term> termsList, double[] vars)
         {
-            decimal final = 0;
-            // TODO: Complete implementation of FinalCalc
+            decimal final = 0m;
+            int terms = termsList.Count();
+            int ops = operators.Count();
+
+            // Make sure that there is one fewer operator than term. 
+            if (terms -1 != ops)
+                throw new Exception();
+
+            else
+            {
+                List<decimal> termResults = new List<decimal>();
+                foreach (Term t in termsList)
+                {
+                    termResults.Add( CalculateTerm(t, vars) );
+
+                }
+
+                //TODO: Figure out how to combine the Terms and the Operators and generate the result.
+            }
+
             return final;
+        }
+
+
+        /// <summary>
+        /// Private Method: CalculateTerm - This method calculates the decimal result for the given Term for the given variable values.
+        /// </summary>
+        /// <param name="term">Term Class Instance</param>
+        /// <param name="vars">int[] with the values for the x,y, and z variables respectively.</param>
+        /// <returns>Decimal - the result of calculating the term.</returns>
+        public static decimal CalculateTerm(Term term, double[] vars)
+        {
+            decimal ret = 0m;
+
+            try
+            {
+                ret = term.Coefficient *
+                    (decimal)(Math.Pow(vars[0], term.xPower)) *
+                    (decimal)(Math.Pow(vars[1], term.yPower)) *
+                    (decimal)(Math.Pow(vars[2], term.zPower));
+            }
+            catch (OverflowException)
+            {
+                throw;
+            }
+
+            return ret;
         }
 
 

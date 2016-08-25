@@ -11,7 +11,7 @@ namespace UnitTestParseEquation
     {
         public const string eqGood = "17x^4y^3 + -9x^3y^2 + 87x^2y + 19x";
         public const decimal finalValue = 95205m;
-        public static decimal[] testVariables = { 3, 4, 5 };
+        public static double[] testVariables = { 3, 4, 5 };
 
     #region Generate Objects for Tests
 

@@ -136,7 +136,7 @@ namespace UnitTestParseEquation
         public void TestFinalCal_GoodEquation_ShouldSuccede()
         {
             List<Term> terms = TestValues.CreateTerms();
-            decimal testResult = Helper.FinalCalc(TestValues.CreateOps(), terms);
+            decimal testResult = Helper.FinalCalc(TestValues.CreateOps(), terms, TestValues.testVariables);
 
             Assert.AreEqual(TestValues.finalValue, testResult);
 

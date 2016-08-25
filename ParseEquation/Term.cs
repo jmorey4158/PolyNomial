@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace ParseEquation
 {
     /// <summary>
-    /// Public Class SubEquation - This class is used to represent the terms in the equation in a way that computer-based calculation can be done.
+    /// Public Class SubEquation - This class is used to represent the terms in the equation 
+    ///     in a way that computer-based calculation can be done.
     /// </summary>
     public class Term
     {
@@ -17,7 +18,6 @@ namespace ParseEquation
             yPower = 1;
             zPower = 1;
         }
-
 
         public int Coefficient { get; set; }
 
