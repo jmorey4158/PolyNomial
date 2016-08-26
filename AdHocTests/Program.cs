@@ -13,16 +13,57 @@ namespace AdHocTests
         public static void Main(string[] args)
         {
 
-            List<Term> t = KnownGood.TermList();
-            var v = KnownGood.VariableValues;
-            var c = KnownGood.TermCalValues;
+            Dictionary<int, string> test = Helper.FindOperators(KnownGood.EquationString);
+            test.OrderBy(pair => pair.Key);
 
-            for (int i = 0; i < t.Count(); i++)
-            {
-                Console.WriteLine($"Should Be: {c[i]}\t\tIs: {Helper.CalculateTerm(t[i], v)}");
-            }
+            Dictionary<int, string> pattern = KnownGood.OpsList();
+            pattern.OrderBy(pair => pair.Key);
+
+            Console.WriteLine( CompareDictionary(pattern, test) );
+
 
             Console.ReadKey();
         }
+
+
+        public static bool CompareDictionary(Dictionary<int, string> pattern, Dictionary<int, string> test)
+        {
+            
+            int[] pkeys = new int[pattern.Count];
+            string[] pvals = new string[pattern.Count];
+
+            int[] tkeys = new int[test.Count];
+            string[] tvals = new string[test.Count];
+
+
+            int i = 0;
+            foreach (KeyValuePair<int,string> kp in pattern)
+            {
+                pkeys[i] = kp.Key;
+                pvals[i] = kp.Value;
+                i++;
+            }
+            i = 0;
+            foreach (KeyValuePair<int,string> kp in test)
+            {
+                tkeys[i] = kp.Key;
+                tvals[i] = kp.Value;
+                i++;
+            }
+
+            for (int k = 0; k < pkeys.Length; k++)
+            {
+                if (pkeys[k] != tkeys[k])
+                    return false;
+
+                if (pvals[k] != tvals[k])
+                    return false;
+            }
+
+            return true;
+        }
+
+
     }
+
 }

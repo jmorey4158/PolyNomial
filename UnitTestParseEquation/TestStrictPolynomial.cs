@@ -16,7 +16,7 @@ namespace UnitTestParseEquation
         [TestMethod]
         public void TestIsValidEquation_GoodEquation_ShouldSuccede()
         {
-            Assert.IsTrue(Helper.IsValidEquation(KnownGood.EquationString));
+            Assert.IsTrue( Helper.IsValidEquation( KnownGood.EquationString ));
         }
 
 
@@ -27,7 +27,7 @@ namespace UnitTestParseEquation
 
             foreach (string beq in badEquations)
             {
-                Assert.IsFalse(Helper.IsValidEquation(beq));
+                Assert.IsFalse( Helper.IsValidEquation(beq) );
             }
         }
 
@@ -39,11 +39,16 @@ namespace UnitTestParseEquation
         [TestMethod]
         public void TestFindOperators_GoodEquation_ShouldSuccede()
         {
-            Dictionary<int, string> test = Helper.FindOperators(KnownGood.EquationString);
+            Dictionary<int, string> test = Helper.FindOperators( KnownGood.EquationString );
             Dictionary<int, string> pattern = KnownGood.OpsList();
 
-            Assert.AreEqual<Dictionary<int, string>>(pattern, test);
-
+            if(test.Count == pattern.Count)
+            {
+                foreach (KeyValuePair<int, string> kp in pattern)
+                {
+                    Assert.IsTrue( CompareDictionary( pattern, test) );
+                }
+            }
         }
 
         [TestMethod]
@@ -147,6 +152,7 @@ namespace UnitTestParseEquation
         #endregion
 
 
+
         #region Test CalculateTerm
 
         [TestMethod]
@@ -194,5 +200,46 @@ namespace UnitTestParseEquation
 
 
 
+        #region Test Helper Methods
+
+        public static bool CompareDictionary(Dictionary<int, string> pattern, Dictionary<int, string> test)
+        {
+
+            int[] pkeys = new int[pattern.Count];
+            string[] pvals = new string[pattern.Count];
+
+            int[] tkeys = new int[test.Count];
+            string[] tvals = new string[test.Count];
+
+
+            int i = 0;
+            foreach (KeyValuePair<int, string> kp in pattern)
+            {
+                pkeys[i] = kp.Key;
+                pvals[i] = kp.Value;
+                i++;
+            }
+            i = 0;
+            foreach (KeyValuePair<int, string> kp in test)
+            {
+                tkeys[i] = kp.Key;
+                tvals[i] = kp.Value;
+                i++;
+            }
+
+            for (int k = 0; k < pkeys.Length; k++)
+            {
+                if (pkeys[k] != tkeys[k])
+                    return false;
+
+                if (pvals[k] != tvals[k])
+                    return false;
+            }
+
+            return true;
+        }
+
+
+        #endregion
     }
 }

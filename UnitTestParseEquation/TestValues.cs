@@ -77,9 +77,9 @@ namespace UnitTestParseEquation
         public static Dictionary<int, string> OpsList()
         {
             Dictionary<int, string> ops = new Dictionary<int, string>();
-            ops.Add(12, "+");
-            ops.Add(24, "+");
-            ops.Add(33, "+");
+            ops.Add(9, "+");
+            ops.Add(20, "+");
+            ops.Add(29, "+");
 
             return ops;
         }

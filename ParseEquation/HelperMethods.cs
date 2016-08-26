@@ -26,7 +26,7 @@ namespace ParseEquation
             // Regex checks for any 'illegal' characters. No point in continuing if 
             //  if consumer provides bad equation. 
             //Regex regx = new Regex(@"[0-9]\s\^\-\+xyz", RegexOptions.IgnoreCase);
-            Regex regx = new Regex(@"[0-9\s\^\-\+xy]", RegexOptions.IgnoreCase);
+            Regex regx = new Regex(@"[\d+\s+\^+\-*\++x+y*]", RegexOptions.IgnoreCase);
 
             if (regx.IsMatch(eq))
                 return true;
@@ -48,7 +48,7 @@ namespace ParseEquation
             Dictionary<int, string> ops = new Dictionary<int, string>();
 
             // Iterate through equation string and find all the legal operators
-            for (int i = 0; i <= eq.Length; i++)
+            for (int i = 0; i < eq.Length-1; i++)
             {
                 // Using switch in case (no pun intended) I want to add more legal operators in future releases.
                 // If we find a match add the location in the string and the operator. 
