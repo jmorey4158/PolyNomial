@@ -53,7 +53,6 @@ namespace UnitTestParseEquation
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ParseEquation.ParseEquationException))]
         public void TestFindOperators_BadEquation_ShouldThrowException()
         {
             List<Dictionary<int, string>> badTests = new List<Dictionary<int, string>>();
@@ -62,11 +61,11 @@ namespace UnitTestParseEquation
 
             foreach (var t in badTests)
             {
-                if (test.Count == pattern.Count)
+                if (t.Count == pattern.Count)
                 {
                     foreach (KeyValuePair<int, string> kp in pattern)
                     {
-                        Assert.IsFalse(CompareDictionary(pattern, test));
+                        Assert.IsFalse( CompareDictionary(pattern, t) );
                     }
                 }
             }

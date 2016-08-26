@@ -78,7 +78,7 @@ namespace ParseEquation
             List<string> terms = new List<string>();
             string eqCopy = eq;
             // Make sure that the term matches a valid polynomial term (e.g. -17x^5y^4x^3)
-            Regex regx = new Regex(@"^\-?([0-9]+)(x\^[0-9]+)?(y\^[0-9]+)?", RegexOptions.IgnoreCase);
+            Regex regx = new Regex(@"^\-?[0-9]+x\^[0-9]+?y\^[0-9]+?", RegexOptions.IgnoreCase);
 
 
             // Iterate through the equation string (positioned by the operator), grab the substring that represents the 
