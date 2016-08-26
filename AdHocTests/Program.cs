@@ -13,13 +13,25 @@ namespace AdHocTests
         public static void Main(string[] args)
         {
 
-            Dictionary<int, string> test = Helper.FindOperators(KnownGood.EquationString);
-            test.OrderBy(pair => pair.Key);
+            List<string> badEquations = KnownBad.KnownBadEquationStrings();
 
-            Dictionary<int, string> pattern = KnownGood.OpsList();
-            pattern.OrderBy(pair => pair.Key);
+            foreach (string beq in badEquations)
+            {
+                try
+                {
+                    Console.WriteLine(beq);
+                    Console.WriteLine(Helper.IsValidEquation(beq));
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("NOPE");
+                }
 
-            Console.WriteLine( CompareDictionary(pattern, test) );
+            }
+
+            //string t = KnownGood.EquationString;
+            //Console.WriteLine(t);
+            //Console.WriteLine(Helper.IsValidEquation(t));
 
 
             Console.ReadKey();

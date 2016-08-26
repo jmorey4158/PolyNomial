@@ -26,12 +26,12 @@ namespace ParseEquation
             // Regex checks for any 'illegal' characters. No point in continuing if 
             //  if consumer provides bad equation. 
             //Regex regx = new Regex(@"[0-9]\s\^\-\+xyz", RegexOptions.IgnoreCase);
-            Regex regx = new Regex(@"[\d+\s+\^+\-*\++x+y*]", RegexOptions.IgnoreCase);
+            Regex regx = new Regex(@"[^\d+\s+\^+\-*\++x+y*]", RegexOptions.IgnoreCase);
 
             if (regx.IsMatch(eq))
-                return true;
+                throw new ParseEquationException("The equation was not properly formed. Please check the equation and try again.");
             else
-                throw new Exception("The equation was not properly formed. Please check the equation and try again.");
+                return true;
 
         }
 
@@ -93,7 +93,7 @@ namespace ParseEquation
                 }
                 else
                 {
-                    throw new Exception($"The equation term {sub} was not properly formed. Check the equation and try again.");
+                    throw new ParseEquationException($"The equation term {sub} was not properly formed. Check the equation and try again.");
                 }
             }
             return terms;
@@ -208,7 +208,7 @@ namespace ParseEquation
         {
             // Make sure there are only two variables
             if (vars.Length > 2)
-                throw new Exception($"Only two variables can be used 'x' and 'y'.");
+                throw new ParseEquationException($"Only two variables can be used 'x' and 'y'.");
 
 
             decimal final = 0;

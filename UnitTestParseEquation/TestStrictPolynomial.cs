@@ -21,6 +21,7 @@ namespace UnitTestParseEquation
 
 
         [TestMethod]
+        [ExpectedException(typeof(ParseEquation.ParseEquationException))]
         public void TestIsValidEquation_BadEquation_ShouldThrowException()
         {
             List<string> badEquations = KnownBad.KnownBadEquationStrings();
@@ -52,8 +53,24 @@ namespace UnitTestParseEquation
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ParseEquation.ParseEquationException))]
         public void TestFindOperators_BadEquation_ShouldThrowException()
         {
+            List<Dictionary<int, string>> badTests = new List<Dictionary<int, string>>();
+            Dictionary<int, string> test = Helper.FindOperators(KnownBad.EquationString1);
+            Dictionary<int, string> pattern = KnownGood.OpsList();
+
+            foreach (var t in badTests)
+            {
+                if (test.Count == pattern.Count)
+                {
+                    foreach (KeyValuePair<int, string> kp in pattern)
+                    {
+                        Assert.IsFalse(CompareDictionary(pattern, test));
+                    }
+                }
+            }
+
         }
 
 
