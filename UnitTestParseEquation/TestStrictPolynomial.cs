@@ -126,7 +126,7 @@ namespace UnitTestParseEquation
 
 
 
-        #region Test PareseTerms
+        #region Test PareseTerms - NOT COMPLETE
 
         [TestMethod]
         public void TestParseTerms_GoodEquation_ShouldSuccede()
@@ -154,7 +154,7 @@ namespace UnitTestParseEquation
 
 
 
-        #region Test FinalCal
+        #region Test FinalCal - NOT COMPLETE
 
         [TestMethod]
         public void TestFinalCal_GoodEquation_ShouldSuccede()
@@ -210,7 +210,7 @@ namespace UnitTestParseEquation
 
 
 
-        #region Test StrictPolynomial
+        #region Test StrictPolynomial - NOT COMPLETE
 
         [TestMethod]
         public void TestStrictPolynomial_GoodEquation_ShouldSuccede()
@@ -223,7 +223,7 @@ namespace UnitTestParseEquation
 
 
 
-        #region Test Helper Methods
+        #region Helper Methods
 
         public static bool CompareDictionary(Dictionary<int, string> pattern, Dictionary<int, string> test)
         {
