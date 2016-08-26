@@ -85,7 +85,10 @@ namespace UnitTestParseEquation
             List<string> termStr = KnownGood.TermStrings();
             List<string> testTerms = Helper.FindTerms(KnownGood.EquationString, KnownGood.OpsList());
 
-            Assert.AreEqual<List<string>>(termStr, testTerms);
+            for (int i = 0; i < termStr.Count; i++)
+            {
+                Assert.AreEqual<string>(termStr[i], testTerms[i]);
+            }
         }
 
         [TestMethod]
@@ -107,7 +110,7 @@ namespace UnitTestParseEquation
             Dictionary<int, string> expectedOps = KnownGood.OpsList();
             Dictionary<int, string> testOps = Helper.FindOperators(KnownGood.EquationString);
 
-            Assert.AreEqual<Dictionary<int, string>>(expectedOps, testOps);
+            Assert.IsTrue( CompareDictionary(expectedOps,  testOps) );
 
         }
 
@@ -131,7 +134,11 @@ namespace UnitTestParseEquation
             List<Term> expectedTerms = KnownGood.TermList();
             List<Term> testTerms = Helper.ParseTerms(KnownGood.TermStrings());
 
-            Assert.AreEqual<List<Term>>(expectedTerms, testTerms);
+            for (int i = 0; i < expectedTerms.Count; i++)
+            {
+                Assert.IsTrue( expectedTerms[i] == testTerms[i] );
+            }
+ 
 
         }
 

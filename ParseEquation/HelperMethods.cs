@@ -75,27 +75,23 @@ namespace ParseEquation
         /// <returns>List(string) - The terms in the equation as strings.</returns>
         public static List<string> FindTerms(string eq, Dictionary<int, string> ops)
         {
+            string[] ts = eq.Split('+');
             List<string> terms = new List<string>();
-            string eqCopy = eq;
-            // Make sure that the term matches a valid polynomial term (e.g. -17x^5y^4x^3)
-            Regex regx = new Regex(@"^\-?[0-9]+x\^[0-9]+?y\^[0-9]+?", RegexOptions.IgnoreCase);
 
-
-            // Iterate through the equation string (positioned by the operator), grab the substring that represents the 
-            //  subequation, validate it, and if valid, add it to the List(string) that represent the equation terms 
-            foreach (KeyValuePair<int, string> kp in ops)
+            foreach (string t in ts)
             {
-                string sub = eqCopy.Substring(0, kp.Key);
-                if (regx.IsMatch(sub))
-                {
-                    terms.Add(sub);
-                    eqCopy = eqCopy.Substring(kp.Key, eqCopy.Length - kp.Key);
-                }
-                else
-                {
-                    throw new ParseEquationException($"The equation term {sub} was not properly formed. Check the equation and try again.");
-                }
+                terms.Add(t.Trim());
+
             }
+
+            // Iterate through the equation string and grab the substring that represents the 
+            //  term and add it to the List(string) that represent the equation terms. 
+            //foreach (KeyValuePair<int, string> kp in ops)
+            //{
+            //    string sub = eqCopy.Substring(0, kp.Key);
+            //    terms.Add(sub);
+            //    eqCopy = eqCopy.Substring(kp.Key + 2, eqCopy.Length - (kp.Key + 2));
+            //}
             return terms;
         }
 
@@ -159,41 +155,51 @@ namespace ParseEquation
         /// <returns>List(SubEquation) - A list of all the equations terms as SubEquation objects.</returns>
         /// <remarks>ParseSubEquation() receives its input from GetSubEquationStrings()</remarks>
         /// <exception cref="">"One or more equation terms was not properly formed. Check the equations and try again."</exception>
-        public static List<Term> ParseTerms(List<string> subeq)
+        public static List<Term> ParseTerms(List<string> termStrings)
         {
-            List<Term> subs = new List<Term>();
+            List<Term> newTermStrings = new List<Term>();
 
+            // Make sure that the term matches a valid polynomial term (e.g. -17x^5y^4x^3)
+            Regex regx = new Regex(@"^\-?[0-9]+x\^[0-9]+?y\^[0-9]+?", RegexOptions.IgnoreCase);
 
-            foreach (var sub in subeq)
+            foreach (var t in termStrings)
             {
-                int len = sub.Length - 1;   // The standard basic guard against OutOfRange exception ;- )
-                int coef = 0;   // This is the actual value of the coefficient. This value will be stuffed into the SubEquation.Coefficient property.
-                bool hasOp = false; // If true then the string representing the coefficient will have '-' at the beginning.
-                int isInt = 0;  // Used as out int of the TryPare(). IF it is not 0 then it represents the parsed int value.
-                int position = 0;   // position determines the parsing starts. IF there is a sign on the coefficient then it bumps position 1.
-
-                // Detect the sign of the coefficient. "+" should never be input, but check for it anyway.
-                if (sub.Substring(position, 1) == "-")
+                if(regx.IsMatch(t))
                 {
-                    hasOp = true;
-                    position = 1;
+                    int len = t.Length - 1;   // The standard basic guard against OutOfRange exception ;- )
+                    int coef = 0;   // This is the actual value of the coefficient. This value will be stuffed into the SubEquation.Coefficient property.
+                    bool isNegative = false; // If true then the string representing the coefficient will have '-' at the beginning.
+                    int isInt = 0;  // Used as out int of the TryPare(). IF it is not 0 then it represents the parsed int value.
+                    int position = 0;   // position determines the parsing starts. IF there is a sign on the coefficient then it bumps position 1.
+
+                    // Detect the sign of the coefficient. "+" should never be input, but check for it anyway.
+                    if (t.Substring(position, 1) == "-")
+                    {
+                        isNegative = true;
+                        position = 1;
+                    }
+                    else if (t.Substring(position, 1) == "+")
+                    {
+                        position = 1;
+                    }
+
+                    // Parse through the remainder of the subequation string and create the Term class instance and then add it to the List(Term)
+                    for (int i = position; i <= len; i++)
+                    {
+                        //TODO: Parse term and create Term class instance
+                    }
                 }
-                else if (sub.Substring(position, 1) == "+")
+                else
                 {
-                    position = 1;
+                    Term failed = new Term();
+                    failed.Coefficient = 1;
+                    failed.xPower = 0;
+                    failed.yPower = 0;
+                    newTermStrings.Add(failed);
                 }
-
-
-
-                // Parse through the remainder of the subequation string and create the Term class instance and then add it to the List(Term)
-                for (int i = position; i <= len; i++)
-                {
-                    //TODO: Parse term and create Term class instance
-                }
-
             }
 
-            return subs;
+            return newTermStrings;
         }
 
 

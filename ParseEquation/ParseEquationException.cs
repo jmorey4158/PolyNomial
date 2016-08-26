@@ -9,6 +9,6 @@ namespace ParseEquation
     public class ParseEquationException : Exception
     {
         public ParseEquationException() { }
-        public ParseEquationException(string mes) { }
+        public ParseEquationException(string message) : base(message) { }
     }
 }
