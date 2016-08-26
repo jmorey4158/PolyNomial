@@ -157,49 +157,90 @@ namespace ParseEquation
         /// <exception cref="">"One or more equation terms was not properly formed. Check the equations and try again."</exception>
         public static List<Term> ParseTerms(List<string> termStrings)
         {
-            List<Term> newTermStrings = new List<Term>();
-
-            // Make sure that the term matches a valid polynomial term (e.g. -17x^5y^4x^3)
-            Regex regx = new Regex(@"^\-?[0-9]+x\^[0-9]+?y\^[0-9]+?", RegexOptions.IgnoreCase);
+            List<Term> newTerms = new List<Term>();
 
             foreach (var t in termStrings)
             {
-                if(regx.IsMatch(t))
+                bool isNegative = false; // If true then the string representing the coefficient will have '-' at the beginning.
+                StringBuilder intSb = new StringBuilder(); // Used to construct Coefficient
+                int position = 0;   // position determines the parsing starts. IF there is a sign on the coefficient then it bumps position 1.
+                Term newTerm = new Term();
+                int result = 0;
+
+                // Detect the sign of the coefficient. "+" should never be input, but check for it anyway.
+                if (t.Substring(position, 1) == "-")
                 {
-                    int len = t.Length - 1;   // The standard basic guard against OutOfRange exception ;- )
-                    int coef = 0;   // This is the actual value of the coefficient. This value will be stuffed into the SubEquation.Coefficient property.
-                    bool isNegative = false; // If true then the string representing the coefficient will have '-' at the beginning.
-                    int isInt = 0;  // Used as out int of the TryPare(). IF it is not 0 then it represents the parsed int value.
-                    int position = 0;   // position determines the parsing starts. IF there is a sign on the coefficient then it bumps position 1.
+                    isNegative = true;
+                    position = 1;
+                }
+                else if (t.Substring(position, 1) == "+")
+                {
+                    position = 1;
+                }
 
-                    // Detect the sign of the coefficient. "+" should never be input, but check for it anyway.
-                    if (t.Substring(position, 1) == "-")
+                if (int.TryParse(t.Substring(position, 1), out result))
+                {
+                    if(isNegative)
                     {
-                        isNegative = true;
-                        position = 1;
+                        newTerm.Coefficient = -Convert.ToInt32(Regex.Match(t.Substring(position), "^[0-9]+").Value);
+                        position += newTerm.Coefficient.ToString().Length-1;
                     }
-                    else if (t.Substring(position, 1) == "+")
+                    else
                     {
-                        position = 1;
-                    }
-
-                    // Parse through the remainder of the subequation string and create the Term class instance and then add it to the List(Term)
-                    for (int i = position; i <= len; i++)
-                    {
-                        //TODO: Parse term and create Term class instance
+                        newTerm.Coefficient = Convert.ToInt32(Regex.Match(t.Substring(position), "^[0-9]+").Value);
+                        position += newTerm.Coefficient.ToString().Length;
                     }
                 }
                 else
                 {
-                    Term failed = new Term();
-                    failed.Coefficient = 1;
-                    failed.xPower = 0;
-                    failed.yPower = 0;
-                    newTermStrings.Add(failed);
+                    throw new ParseEquationException($"The TermString character {t.Substring(position, 1)} must be an integer. Check the equation and try again.");
                 }
+
+                for (int index = position; index < t.Length;)
+                {
+                    switch(t.Substring(index,1))
+                    {
+                        case "x":
+                            try
+                            {
+                                newTerm.xPower = FindTermInt(t.Substring(index +2, 1));
+                                index += newTerm.xPower.ToString().Length+2;
+                            }
+                            catch (Exception)
+                            {
+                                newTerm.xPower = 1;
+                                index++;
+                            }
+                            break;
+
+                        case "y":
+                            try
+                            {
+                                newTerm.yPower = FindTermInt(t.Substring(index + 2, 1));
+                                index += newTerm.yPower.ToString().Length+2;
+                            }
+                            catch (Exception)
+                            {
+                                newTerm.yPower = 1;
+                                index++;
+                            }
+
+                            break;
+
+                        case "^":
+                            index++;
+                            break;
+
+                        default:
+                            throw new ParseEquationException($"The TermString character {t.Substring(position, 1)} must be an integer. Check the equation and try again.");
+                    }
+                }
+
+
+                newTerms.Add(newTerm);
             }
 
-            return newTermStrings;
+            return newTerms;
         }
 
 
@@ -214,27 +255,31 @@ namespace ParseEquation
         {
             // Make sure there are only two variables
             if (vars.Length > 2)
-                throw new ParseEquationException($"Only two variables can be used 'x' and 'y'.");
+                throw new ParseEquationException($"Only two variables can be used -- 'x' and 'y'.");
 
 
             decimal final = 0;
-            int terms = termsList.Count();
-            int ops = operators.Count();
+            int oLen = operators.Count();
+            int tLen = termsList.Count();
 
             // Make sure that there is one fewer operator than term. 
-            if (terms-1 != ops)
-                throw new Exception();
-
+            if (tLen - 1 != oLen)
+                throw new ParseEquationException("The number of Operators must be one less than the number of Terms. Check the equation and try again.");
             else
             {
-                List<decimal> termResults = new List<decimal>();
-                foreach (Term t in termsList)
+                // Calculate the result for each term and store
+                // The list of Term results must be an Array to iterate through Terms and Operators properly
+                decimal[] termResults = new decimal[tLen];
+                for (int i = 0; i < tLen; i++)
                 {
-                    termResults.Add( CalculateTerm(t, vars) );
-
+                    termResults[i] = CalculateTerm(termsList[i], vars);
                 }
 
-                //TODO: Figure out how to combine the Terms and the Operators and generate the result.
+                for (int i = 0; i < termResults.Length - 1;)
+                {
+                    final += (termResults[i] + termResults[i + 1]);
+                    i += 2;
+                }
             }
 
             return final;
@@ -265,6 +310,33 @@ namespace ParseEquation
             }
 
             return (decimal)ret;
+        }
+
+
+        /// <summary>
+        /// Helper Method FindTermInt - Finds the integer part of the string passed in. This is uses to find the 
+        ///     integer parts of a TermString. 
+        /// </summary>
+        /// <param name="s">String - Part of a TermString</param>
+        /// <returns>Int - the integer part of the string</returns>
+        public static int FindTermInt(string s)
+        {
+            int outInt = 0;
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (int.TryParse(s.Substring(i, 1), out outInt))
+                    sb.Append(outInt.ToString());
+                else
+                    break;
+            }
+
+            if (int.TryParse(sb.ToString(), out outInt))
+                return outInt;
+            else
+                throw new ParseEquationException($"No integers were found in the string {s}. Check the equation and try again.");
+
         }
 
 

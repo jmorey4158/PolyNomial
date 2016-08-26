@@ -13,23 +13,10 @@ namespace AdHocTests
     {
         public static void Main(string[] args)
         {
-            // KnownGood 17x^4y^3
-            // FUll Regex string '^\-?[0-9]+x\^[0-9]+?y\^[0-9]+'
-            Regex regx = new Regex(@"^\-?[0-9]+x\^{1}\d+[y\^{1}\d+]?", RegexOptions.IgnoreCase);
-
-            List<string> good = KnownGood.TermStrings();
-
-            foreach (var g in good)
-            {
-                Console.WriteLine($"Pattern: {regx}\nTerm: {g}\nPassed: {regx.IsMatch(g)}\n");
-            }
-
-            //string g = "17x^33^4";
-            //Console.WriteLine($"Pattern: {regx}\nTerm: {g}\nPassed: {regx.IsMatch(g)}\n");
-
-
-
-
+            decimal kg = KnownGood.FinalAnswer;
+            decimal t = Calculate.StrictPolynomial(KnownGood.EquationString, KnownGood.VariableValues);
+            Console.WriteLine($"KG ANswer: {kg}\nTest Answer: {t}\nAreEqual: {kg == t}");
+                
             Console.ReadKey();
         }
 

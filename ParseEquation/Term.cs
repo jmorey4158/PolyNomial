@@ -14,8 +14,8 @@ namespace ParseEquation
     {
         public Term()
         {
-            xPower = 1;
-            yPower = 1;
+            xPower = 0;
+            yPower = 0;
         }
 
         public int Coefficient { get; set; }

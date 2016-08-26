@@ -11,7 +11,7 @@ namespace UnitTestParseEquation
     {
         public const string EquationString = "17x^4y^3 + -9x^3y^2 + 87x^2y + 19x";
         public static decimal[] VariableValues = { 3, 4 };
-        public const decimal FinalAnswer = 95205;
+        public const decimal FinalAnswer = 87429;
         public static decimal[] TermCalValues = { 88128, -3888, 3132, 57 };
 
 

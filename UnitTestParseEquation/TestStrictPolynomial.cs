@@ -11,7 +11,7 @@ namespace UnitTestParseEquation
 
 
 
-        #region Test IsValidEquation
+        #region Test IsValidEquation - COMPLETE
 
         [TestMethod]
         public void TestIsValidEquation_GoodEquation_ShouldSuccede()
@@ -35,7 +35,7 @@ namespace UnitTestParseEquation
         #endregion
 
 
-        #region Test FindOperators
+        #region Test FindOperators - COMPLETE
 
         [TestMethod]
         public void TestFindOperators_GoodEquation_ShouldSuccede()
@@ -77,7 +77,7 @@ namespace UnitTestParseEquation
 
 
 
-        #region Test FindTerms
+        #region Test FindTerms - COMPLETE
 
         [TestMethod]
         public void TestFindTerms_GoodEquation_ShouldSuccede()
@@ -102,7 +102,7 @@ namespace UnitTestParseEquation
 
 
 
-        #region Test FindExponent
+        #region Test FindExponent - COMPLETE
 
         [TestMethod]
         public void TestFindExponent_GoodEquation_ShouldSuccede()
@@ -126,20 +126,24 @@ namespace UnitTestParseEquation
 
 
 
-        #region Test PareseTerms - NOT COMPLETE
+        #region Test PareseTerms - COMPLETE
 
         [TestMethod]
         public void TestParseTerms_GoodEquation_ShouldSuccede()
         {
-            List<Term> expectedTerms = KnownGood.TermList();
+            List<Term> kgTerms = KnownGood.TermList();
             List<Term> testTerms = Helper.ParseTerms(KnownGood.TermStrings());
 
-            for (int i = 0; i < expectedTerms.Count; i++)
+            for (int i = 0; i < kgTerms.Count; i++)
             {
-                Assert.IsTrue( expectedTerms[i] == testTerms[i] );
-            }
- 
+                Assert.IsTrue( kgTerms[i].Coefficient == testTerms[i].Coefficient );
+                Assert.IsTrue( kgTerms[i].xPower == testTerms[i].xPower );
 
+                if(testTerms[i].yPower != 0)
+                {
+                    Assert.IsTrue(kgTerms[i].yPower == testTerms[i].yPower);
+                }
+            }
         }
 
         [TestMethod]
@@ -154,29 +158,22 @@ namespace UnitTestParseEquation
 
 
 
-        #region Test FinalCal - NOT COMPLETE
+        #region Test FinalCal - COMPLETE
 
         [TestMethod]
         public void TestFinalCal_GoodEquation_ShouldSuccede()
         {
             List<Term> terms = KnownGood.TermList();
-            decimal testResult = Helper.FinalCalc(KnownGood.OpsList(), terms, KnownGood.VariableValues);
+            decimal testResult = Helper.FinalCalc( KnownGood.OpsList(), terms, KnownGood.VariableValues );
 
             Assert.AreEqual(KnownGood.FinalAnswer, testResult);
-
-        }
-
-        [TestMethod]
-        public void TestFinalCal_BadEquation_ShouldThrowException()
-        {
-            // Should throw Exception("The equation was not properly formed. Please check the equation and try again.")
         }
 
         #endregion
 
 
 
-        #region Test CalculateTerm
+        #region Test CalculateTerm - COMPLETE
 
         [TestMethod]
         public void TestCalculateSingleTerm_GoodTerm_ShouldSuccede()
@@ -215,7 +212,7 @@ namespace UnitTestParseEquation
         [TestMethod]
         public void TestStrictPolynomial_GoodEquation_ShouldSuccede()
         {
-            Assert.AreEqual<decimal>(KnownGood.FinalAnswer, 
+            Assert.AreEqual<decimal>( KnownGood.FinalAnswer, 
                 Calculate.StrictPolynomial(KnownGood.EquationString, KnownGood.VariableValues));
         }
 
