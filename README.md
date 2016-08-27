@@ -24,8 +24,11 @@ After having broken the main problem into chucks, assign each chunk to a helper 
 Next, one codes each helper method until the unit tests pass. The pattern that I found works well is the “Inside-Out” Pattern (see below). Once all the chucks are done and all the unit tests pass, it time to finish up.
 
 ###Aggregate
-The last thing to do is to create the code to aggregate the sub-answers into the main answer. One creates code that calls all the helper methods and passes the final solution to the consumer.  
+The last thing to do is to create the code to aggregate the sub-answers into the main answer. One creates code that calls all the helper methods and passes the final solution to the consumer. 
+
+
 ##The Inside-Out Pattern
+Coming Soo!
 
 ##5F Pattern
 The 5F Pattern is an over-arching philosophy, or guiding principle for developing long-term, end-to-end projects that helps one to guarantee quality and effectiveness. 
