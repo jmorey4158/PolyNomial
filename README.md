@@ -55,6 +55,12 @@ Friendly means that you always use unit tests for each and every method. (Confes
 And friendly code also means that you use a naming convention. It really make code much more readable. 
 
 ###Fast
-OK, now, after we have endured all of the niceness above, it’s time to do what we all want to do – make our code faster.
+OK, now, after we have endured all of the niceness above, it’s time to do what we all want to do – make our code faster. Find ways to be more efficient. Simplify the code. Can we run a set of tasks using .AsParallel? How can we cut out steps?
+
+###Futuristic
+This is where we refactor our code when new features come out (if we have the time). For example, in Polynomial, I changed all my exceptions to use String Interpolation (new in C# 6.0). 
+
+Another important step is to make sure that we haven’t coded ourselves into a corner and that the code is open to future features. 
+
 
 
